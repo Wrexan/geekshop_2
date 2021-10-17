@@ -4,8 +4,10 @@ from django.shortcuts import render
 
 
 def index(request):
+    context = {'title': 'GeekShop'}
     return render(request, 'products/index.html')
 
 
 def products(request):
-    return render(request, 'products/products.html')
+    context = {'title': 'GeekShop-Catalog'}
+    return render(request, 'products/product.html')
