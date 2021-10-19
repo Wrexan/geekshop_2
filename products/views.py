@@ -1,21 +1,16 @@
 from django.shortcuts import render
-import os
-import json
-
-MODULE_DIR = os.path.dirname(__file__)
-
-# Create your views here.
+from datetime import datetime
+from products.models import ProductCategory, Product
 
 
 def index(request):
-    context = {'title': 'GeekShop111'}
+    context = {'title': 'GeekShop111',
+               'date': datetime.now()}
     return render(request, 'products/index.html', context)
 
 
 def products(request):
-    items = json.load(open(os.path.join(MODULE_DIR, 'fixtures/products.json'), encoding='utf-8'))
-    # for i in items:
-    #
     context = {'title': 'GeekShop-Catalog',
-               'products': items}
+               'products': Product.objects.all(),
+               'categories': ProductCategory.objects.all()}
     return render(request, 'products/products.html', context)
