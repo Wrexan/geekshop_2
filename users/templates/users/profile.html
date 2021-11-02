@@ -57,7 +57,8 @@
                     </div>
                 </form>
                 {% if messages or form.errors %}
-                    <div class="alert {% if messages %} alert-success {% else %} alert-warning {% endif %} alert-dismissible fade show" role="alert"
+                    <div class="alert {% if messages %} alert-success {% else %} alert-warning {% endif %} alert-dismissible fade show"
+                         role="alert"
                          style="margin-top: 50px;">
                         {% if messages %}
                             {% for message in messages %}

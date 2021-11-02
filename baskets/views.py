@@ -1,4 +1,5 @@
 from django.shortcuts import HttpResponseRedirect
+from django.contrib import messages
 
 from products.models import Product
 from baskets.models import Basket
@@ -12,8 +13,11 @@ def basket_add(request, product_id):
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
     else:
         basket = baskets.first()
-        basket.quantity += 1
-        basket.save()
+        if product.quantity - basket.quantity > 0:
+            basket.quantity += 1
+            basket.save()
+        else:
+            messages.error(request, product.name + ' - закончились.')
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 
