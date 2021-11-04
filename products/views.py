@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import HttpResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 
@@ -16,7 +17,7 @@ def index(request):
     return render(request, 'products/index.html', context)
 
 
-def products(request, category_id=None):
+def products(request, category_id=None, page=1):
     if category_id:
         # category = ProductCategory.objects.get(id=category_id)
         # products = Product.objects.filter(category=category)
@@ -24,8 +25,15 @@ def products(request, category_id=None):
     else:
         products = Product.objects.all()
     context = {'title': 'GeekShop-Catalog',
-               'products': products,
                'categories': ProductCategory.objects.all()}
+    paginator = Paginator(products, 3)
+    try:
+        products_paginator = paginator.page(page)
+    except PageNotAnInteger:
+        products_paginator = paginator.page(1)
+    except EmptyPage:
+        products_paginator = paginator.page(paginator.num_pages)
+    context['products'] = products_paginator
     return render(request, 'products/products.html', context)
 
 
