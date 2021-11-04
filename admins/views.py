@@ -80,7 +80,6 @@ class UserDeleteView(DeleteView):
     def dispatch(self, request, *args, **kwargs):
         return super(UserDeleteView, self).dispatch(request, *args, **kwargs)
 
-
 # @user_passes_test(lambda u: u.is_staff)
 # def admin_users(request):
 #     context = {
