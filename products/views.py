@@ -1,10 +1,14 @@
 from django.shortcuts import render
 from django.shortcuts import HttpResponse
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.template.loader import render_to_string
+from django.http import JsonResponse
+
 from datetime import datetime
 from products.models import ProductCategory, Product
 from baskets.models import Basket
-from django.contrib.auth.decorators import login_required
 
 
 def index(request):
@@ -13,10 +17,23 @@ def index(request):
     return render(request, 'products/index.html', context)
 
 
-def products(request):
+def products(request, category_id=None, page=1):
+    if category_id:
+        # category = ProductCategory.objects.get(id=category_id)
+        # products = Product.objects.filter(category=category)
+        products = Product.objects.filter(category_id=category_id)
+    else:
+        products = Product.objects.all()
     context = {'title': 'GeekShop-Catalog',
-               'products': Product.objects.all(),
                'categories': ProductCategory.objects.all()}
+    paginator = Paginator(products, 3)
+    try:
+        products_paginator = paginator.page(page)
+    except PageNotAnInteger:
+        products_paginator = paginator.page(1)
+    except EmptyPage:
+        products_paginator = paginator.page(paginator.num_pages)
+    context['products'] = products_paginator
     return render(request, 'products/products.html', context)
 
 
@@ -34,7 +51,12 @@ def item_add(request, id):
                 basket.save()
             else:
                 messages.error(request, item.name + ' - закончились.')
-        baskets = Basket.objects.filter(user=request.user)
+        # baskets = Basket.objects.filter(user=request.user)
+        # print(baskets, baskets.total_quantity())
+        # context = {'baskets': Basket.total_quantity(baskets)}
+        # result = render_to_string('products/base.html', context)
+        # print(result)
+        # return JsonResponse({'result': result})
         return HttpResponse(request)
 
     # product = Product.objects.get(id=product_id)
