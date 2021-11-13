@@ -1,3 +1,4 @@
+import django.contrib.auth.backends
 from django.core.mail import send_mail
 from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse
@@ -85,10 +86,10 @@ def send_verify_email(user):
 def verify(request, email, activation_key):
     try:
         user = User.objects.get(email=email)
-        if user.activation_key == activation_key and not user.is_activation_key_expired():
+        if user.activation_key == activation_key and not user.is_activation_key_expired:
             user.is_active = True
             user.save()
-            auth.login(request, user)
+            auth.login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             messages.success(request, 'Вы успешно зарегистрированы!')
             return render(request, 'products/index.html')
         else:
