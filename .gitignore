@@ -3,3 +3,5 @@
 /__pycache__/
 media
 /users.json
+/geekshop/.env
+/geekshop/IDs

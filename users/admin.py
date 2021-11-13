@@ -6,3 +6,5 @@ from baskets.admin import BasketAdmin
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     inlines = (BasketAdmin,)
+    # list_display = ('activation_key',)
+
