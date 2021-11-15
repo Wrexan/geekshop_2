@@ -5,9 +5,10 @@ from django.urls import reverse
 from django.contrib import auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 
 from geekshop import settings
-from users.forms import UserLoginForm, UserRegistrationForm, UserProfileForm
+from users.forms import UserLoginForm, UserRegistrationForm, UserProfileForm, UserProfileEditForm
 from baskets.models import Basket
 from users.models import User
 
@@ -47,24 +48,31 @@ def registration(request):
 
 
 @login_required
+@transaction.atomic
 def profile(request):
     user = request.user
     if request.method == 'POST':
         form = UserProfileForm(instance=user, files=request.FILES, data=request.POST)
-        if form.is_valid():
+        profile_form = UserProfileEditForm(instance=user.userprofile, data=request.POST)
+        if form.is_valid() and profile_form.is_valid():
             form.save()
             messages.success(request, 'Данные успешно изменены')
-            return HttpResponseRedirect(reverse('users:profile'))
         else:
-            messages.error(request, 'Данные не внесены')
-            return HttpResponseRedirect(reverse('users:profile'))
+            if form.is_valid():
+                messages.error(request, 'Ошибка основных данных: ' + str(profile_form.errors))
+                print(profile_form.errors)
+            else:
+                messages.error(request, 'Ошибка: ' + str(form.errors))
+                print(form.errors)
+        return HttpResponseRedirect(reverse('users:profile'))
     else:
         form = UserProfileForm(instance=user)
+        profile_form = UserProfileEditForm(instance=user.userprofile)
 
     context = {
         'title': 'GeekShop - Профиль',
         'form': form,
-        # 'baskets': Basket.objects.filter(user=user),
+        'profile_form': profile_form,
     }
     return render(request, 'users/profile.html', context)
 
@@ -98,4 +106,3 @@ def verify(request, email, activation_key):
     except Exception as e:
         print(f'error user registration: {e.args}')
         return HttpResponseRedirect(reverse('index'))
-
