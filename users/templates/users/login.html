@@ -30,7 +30,8 @@
                             {% if user.is_authenticated %}
                                 <p>Вы уже вошли как {{ user.username }}</p>
                             {% else %}
-                                <a href="{% provider_login_url 'google' %}">Войти через Google</a>
+                                <p><a href="{% provider_login_url "facebook" method="oauth2" %}">Войти через Facebook</a></p>
+                                <p><a href="{% provider_login_url 'google' %}">Войти через Google</a></p>
                             {% endif %}
                         </div>
                         <div class="card-footer text-center">

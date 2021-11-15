@@ -48,11 +48,14 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
 
     'products',
     'users',
     'baskets',
     'admins',
+
+    # 'social_django'
 ]
 
 MIDDLEWARE = [
@@ -63,6 +66,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'geekshop.urls'
@@ -151,7 +155,7 @@ AUTH_USER_MODEL = 'users.User'
 
 LOGIN_URL = '/users/login/'
 
-DOMAIN_NAME = 'http://127.0.0.1:8000'
+DOMAIN_NAME = 'https://127.0.0.1:8000'
 
 # Email
 EMAIL_HOST = 'smtp.mailtrap.io'
@@ -162,8 +166,12 @@ EMAIL_PORT = '2525'
 # Google
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend'
+    'allauth.account.auth_backends.AuthenticationBackend',
+    # 'social_core.backends.facebook.FacebookOAuth2'
 ]
+SOCIAL_AUTH_FACEBOOK_KEY = env('SOCIAL_AUTH_FACEBOOK_KEY')
+SOCIAL_AUTH_FACEBOOK_SECRET = env('SOCIAL_AUTH_FACEBOOK_SECRET')
+
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
@@ -172,6 +180,32 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
         'AUTH_PARAMS': {
             'access_type': 'online',
+        }
+    },
+    'facebook': {
+        'METHOD': 'oauth2',
+        'SDK_URL': '//connect.facebook.net/{locale}/sdk.js',
+        'SCOPE': ['email', 'public_profile'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'INIT_PARAMS': {'cookie': True},
+        'FIELDS': [
+            'id',
+            'first_name',
+            'last_name',
+            'middle_name',
+            'name',
+            'name_format',
+            'picture',
+            'short_name'
+        ],
+        'EXCHANGE_TOKEN': True,
+        'LOCALE_FUNC': 'path.to.callable',
+        'VERIFIED_EMAIL': False,
+        'VERSION': 'v7.0',
+        'APP': {
+            'client_id': env('SOCIAL_AUTH_FACEBOOK_KEY'),
+            'secret': env('SOCIAL_AUTH_FACEBOOK_SECRET'),
+            'key': env('SOCIAL_AUTH_FACEBOOK_KEY'),
         }
     }
 }
