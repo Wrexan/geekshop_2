@@ -20,22 +20,23 @@
                                     <label class="small mb-1" for="{{ form.password.id_for_label }}">Пароль</label>
                                     {{ form.password }}
                                 </div>
-                                <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
-                                    <a class="small" href="#">Забыли пароль?</a>
+                                <div class="form-group text-center mt-4 mb-0">
                                     <input class="btn btn-primary" type="submit" value="Авторизоваться">
                                 </div>
                             </form>
                         </div>
-                        <div class="card-footer text-center">
+                        <div class="card-footer text-center ">
                             {% if user.is_authenticated %}
                                 <p>Вы уже вошли как {{ user.username }}</p>
                             {% else %}
-                                <p><a href="{% provider_login_url "facebook" method="oauth2" %}">Войти через Facebook</a></p>
-                                <p><a href="{% provider_login_url 'google' %}">Войти через Google</a></p>
+                                <div><a class="btn btn-primary mt-2 mb-2" href="{% provider_login_url "facebook" method="oauth2" %}">Войти через Facebook</a></div>
+                                <div><a class="btn btn-primary mt-2 mb-2" href="{% provider_login_url 'google' %}">Войти через Google</a></div>
                             {% endif %}
                         </div>
-                        <div class="card-footer text-center">
-                            <div class="small"><a href="{% url 'users:registration' %}">Нужен аккаунт? Зарегистрируйся!</a></div>
+                        <div class="small card-footer text-center mt-0">
+                            <a href="#">Восстановить пароль</a>
+                            <span>|</span>
+                            <a href="{% url 'users:registration' %}">Зарегистрироваться</a>
                         </div>
                     </div>
                 </div>
