@@ -27,7 +27,11 @@ window.onload = function () {
                 orderitem_quantity = parseInt(target.value);
                 delta_quantity = orderitem_quantity - quantity_arr[orderitem_num];
                 quantity_arr[orderitem_num] = orderitem_quantity;
-                console.log(delta_quantity, orderitem_quantity, quantity_arr[orderitem_num])
+                console.log('orderitem_num:',orderitem_num,
+                            'delta_quantity:',delta_quantity,
+                            'orderitem_quantity:',orderitem_quantity,
+                            'quantity_arr[orderitem_num]:',quantity_arr[orderitem_num],
+                            'price_arr[orderitem_num]:',price_arr[orderitem_num])
                 orderSummaryUpdate(price_arr[orderitem_num], delta_quantity);
             }
         });
@@ -42,16 +46,20 @@ window.onload = function () {
             }
             orderSummaryUpdate(price_arr[orderitem_num], delta_quantity);
         });
+    }
 
-        function orderSummaryUpdate(orderitem_price, delta_quantity) {
-            delta_cost = orderitem_price + delta_quantity;
-            order_total_price = Number((order_total_price + delta_cost).toFixed(2));
+    function orderSummaryUpdate(orderitem_price, delta_quantity) {
+        delta_cost = orderitem_price + delta_quantity;
+        order_total_price = Number((order_total_price + delta_cost).toFixed(2));
 
-            order_total_quantity = order_total_quantity + delta_quantity;
-
-            $('.order_total_quantity').html(order_total_quantity.toString());
-            $('.order_total_cost').html(order_total_price.toString() + ',00');
-        }
+        order_total_quantity = order_total_quantity + delta_quantity;
+        console.log('Update: orderitem_price:',orderitem_price,
+                            'delta_quantity:',delta_quantity,
+                            'delta_cost:',delta_cost,
+                            'order_total_price:',order_total_price,
+                            'order_total_quantity:',order_total_quantity)
+        $('.order_total_quantity').html(order_total_quantity.toString());
+        $('.order_total_cost').html(order_total_price.toString() + ',00');
     }
 
     function deleteOrderItem(row) {
@@ -68,8 +76,8 @@ window.onload = function () {
         removed: deleteOrderItem
     });
 
-    $('.order_form select').change(function () {
-        let target = event.target;
-        console.log(target);
-    });
+    // $('.order_form select').change(function () {
+    //     let target = event.target;
+    //     console.log(target);
+    // });
 };
