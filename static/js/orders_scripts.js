@@ -49,7 +49,7 @@ window.onload = function () {
     }
 
     function orderSummaryUpdate(orderitem_price, delta_quantity) {
-        delta_cost = orderitem_price + delta_quantity;
+        delta_cost = orderitem_price * delta_quantity;
         order_total_price = Number((order_total_price + delta_cost).toFixed(2));
 
         order_total_quantity = order_total_quantity + delta_quantity;
@@ -72,7 +72,7 @@ window.onload = function () {
     $('.formset_row').formset({
         addText: 'добавить продукт',
         deleteText: 'удалить',
-        prefix: 'orderitems',
+        prefix: 'orderitem',
         removed: deleteOrderItem
     });
 
