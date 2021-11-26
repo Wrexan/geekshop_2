@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
+DEBUG = True if env('DEBUG') == 'True' else False
 
 ALLOWED_HOSTS = ['*']
 
@@ -95,17 +95,38 @@ WSGI_APPLICATION = 'geekshop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
-    'default': {
-        'NAME': 'geekshop',
-        'ENGINE': 'django.db.backends.postgresql',
-        'USER': 'postgres',
-    }
-}
+match env('DB'):  # for python >3.9
+    case 'SQL':
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
+    case _:
+        DATABASES = {
+            'default': {
+                'NAME': 'geekshop',
+                'ENGINE': 'django.db.backends.postgresql',
+                'USER': 'postgres',
+            }
+        }
+
+# if env('DB') == 'SQL':  # for python <=3.9
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': BASE_DIR / 'db.sqlite3',
+#         }
+#     }
+# else:
+#     DATABASES = {
+#         'default': {
+#         'NAME': 'geekshop',
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'USER': 'postgres',
+#     }
+# }
 
 
 # Password validation
@@ -161,7 +182,7 @@ AUTH_USER_MODEL = 'users.User'
 
 LOGIN_URL = '/users/login/'
 
-DOMAIN_NAME = 'https://127.0.0.1:8000'
+DOMAIN_NAME = 'http://127.0.0.1:8000'
 
 # Email
 EMAIL_HOST = 'smtp.mailtrap.io'
