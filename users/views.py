@@ -1,4 +1,4 @@
-import django.contrib.auth.backends
+# import django.contrib.auth.backends
 from django.core.mail import send_mail
 from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse
@@ -9,7 +9,7 @@ from django.db import transaction
 
 from geekshop import settings
 from users.forms import UserLoginForm, UserRegistrationForm, UserProfileForm, UserProfileEditForm
-from baskets.models import Basket
+# from baskets.models import Basket
 from users.models import User
 
 
@@ -23,6 +23,8 @@ def login(request):
             if user and user.is_active:
                 auth.login(request, user)
                 return HttpResponseRedirect(reverse('index'))
+        else:
+            messages.error(request, form.errors)
     else:
         form = UserLoginForm()
     context = {'title': 'GeekShop - Авторизация', 'form': form}
@@ -39,8 +41,10 @@ def registration(request):
                                           'Для завершения регистрации перейдите по ссылке в письме')
                 return HttpResponseRedirect(reverse('users:login'))
             else:
-                messages.error(request, 'Ошибка при отправке письма!')
+                messages.error(request, form.errors)
                 return HttpResponseRedirect(reverse('users:registration'))
+        else:
+            messages.error(request, form.errors)
     else:
         form = UserRegistrationForm()
     context = {'title': 'GeekShop - Регистрация', 'form': form}
@@ -54,16 +58,17 @@ def profile(request):
     if request.method == 'POST':
         form = UserProfileForm(instance=user, files=request.FILES, data=request.POST)
         profile_form = UserProfileEditForm(instance=user.userprofile, data=request.POST)
-        if form.is_valid() and profile_form.is_valid():
+        form.check_pwd()
+        print(form.errors or 'ok')
+        print(UserProfileForm().errors or 'ok')
+        if form.is_valid() and profile_form.is_valid() and not form.errors:
             form.save()
             messages.success(request, 'Данные успешно изменены')
         else:
             if form.is_valid():
-                messages.error(request, 'Ошибка основных данных: ' + str(profile_form.errors))
-                print(profile_form.errors)
+                messages.error(request, profile_form.errors)
             else:
-                messages.error(request, 'Ошибка: ' + str(form.errors))
-                print(form.errors)
+                messages.error(request, form.errors)
         return HttpResponseRedirect(reverse('users:profile'))
     else:
         form = UserProfileForm(instance=user)
@@ -86,7 +91,7 @@ def send_verify_email(user):
     verify_link = reverse('users:verify', args=[user.email, user.activation_key])
     title = f'Подтверждение учетной записи {user.username}'
     message = f'Для подтверждения учетной записи {user.username} на портале ' \
-              f'{settings.DOMAIN_NAME} перейдите по ссылке {settings.DOMAIN_NAME}{verify_link}'
+              f'{settings.DOMAIN_NAME} перейдите по ссылке\n{settings.DOMAIN_NAME}{verify_link}'
 
     return send_mail(title, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
 
@@ -94,14 +99,16 @@ def send_verify_email(user):
 def verify(request, email, activation_key):
     try:
         user = User.objects.get(email=email)
-        if user.activation_key == activation_key and not user.is_activation_key_expired:
+        exp, mess = user.is_activation_key_expired
+        if user.activation_key == activation_key and not exp:
             user.is_active = True
             user.save()
             auth.login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             messages.success(request, 'Вы успешно зарегистрированы!')
             return render(request, 'products/index.html')
         else:
-            messages.error(request, 'Cсылка для подтверждения регистрации не действительна!')
+            messages.error(request, 'Cсылка для подтверждения регистрации не действительна!\n' +
+                           mess)
             return render(request, 'users/registration.html')
     except Exception as e:
         print(f'error user registration: {e.args}')

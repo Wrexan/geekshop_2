@@ -13,7 +13,13 @@ class User(AbstractUser):
 
     @property
     def is_activation_key_expired(self):
-        return now() - self.date_joined > timedelta(hours=48)
+        res = now() - self.date_joined > timedelta(hours=48)
+        message = '' if not res else \
+            f'Сейчас: {now()}\n' \
+            f'Дата регистрации: {self.date_joined}\n' \
+            f'Прошло {now() - self.date_joined}\n' \
+            f'Допустимое время: {timedelta(hours=48)}'
+        return res, message
 
     def safe_delete(self):
         self.is_active = False
@@ -40,10 +46,7 @@ class UserProfile(models.Model):
     gender = models.CharField(verbose_name='пол', max_length=1, choices=GENDER_CHOICES, blank=True)
 
     @receiver(post_save, sender=User)
-    def save_user_profile(sender, instance, **kwargs):
-        instance.userprofile.save()
-
-    @receiver(post_save, sender=User)
-    def create_user_profile(sender, instance, created, **kwargs):
+    def user_profile_saved(sender, instance, created, **kwargs):
         if created:
             UserProfile.objects.create(user=instance)
+        instance.userprofile.save()
