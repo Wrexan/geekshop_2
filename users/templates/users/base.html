@@ -10,31 +10,19 @@
     <meta name="author" content=""/>
     <title>{{ title }}</title>
     <link href="{% static 'css/auth-admin.css' %}" rel="stylesheet"/>
-{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js"#}
-{#            crossorigin="anonymous"></script>#}
+    {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js"#}
+    {#            crossorigin="anonymous"></script>#}
 </head>
 <body class="bg-primary">
 <div id="layoutAuthentication">
     <div id="layoutAuthentication_content">
         {% if messages or form.errors %}
             <div class="card-body">
-                  <div class="row justify-content-center">
-                        <div class="alert {% if messages %} alert-success {% else %} alert-warning {% endif %} alert-dismissible fade show" role="alert"
-                         style="margin-top: 50px;width: 800px">
-                        {% if messages %}
-                            {% for message in messages %}
-                                {{ message }}
-                            {% endfor %}
-                        {% else %}
-                            {% for error in form.non_field_errors %}
-                                {{ error }}
-                            {% endfor %}
-                        {% endif %}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        </div>
-                  </div>
+                <div class="row justify-content-center">
+                    <div class="container">
+                        {% include 'products/messages.html' %}
+                    </div>
+                </div>
             </div>
         {% endif %}
         {% block content %}{% endblock %}

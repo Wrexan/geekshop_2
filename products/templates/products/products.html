@@ -18,27 +18,27 @@
                         <a href="{% url 'products:category' cat.id %}" class="list-group-item">{{ cat.name }}</a>
                     {% endfor %}
                 </div>
-                {% if messages or errors %}
-                    <div class="alert alert-dismissible fade show" role="alert"
-                         style="margin-top: 50px;">
-                        {% if messages %}
-                            {% for message in messages %}
-                                {% if message.tags == "error" %}
-                                    <div class="alert alert-danger">
-                                        {{ message }}
-                                    </div>
-                                {% else %}
-                                    <div class="alert alert-success">
-                                        {{ message }}
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
-                        {% endif %}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                {% endif %}
+{#                {% if messages or errors %}#}
+{#                    <div class="alert alert-dismissible fade show" role="alert"#}
+{#                         style="margin-top: 50px;">#}
+{#                        {% if messages %}#}
+{#                            {% for message in messages %}#}
+{#                                {% if message.tags == "error" %}#}
+{#                                    <div class="alert alert-danger">#}
+{#                                        {{ message }}#}
+{#                                    </div>#}
+{#                                {% else %}#}
+{#                                    <div class="alert alert-success">#}
+{#                                        {{ message }}#}
+{#                                    </div>#}
+{#                                {% endif %}#}
+{#                            {% endfor %}#}
+{#                        {% endif %}#}
+{#                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">#}
+{#                            <span aria-hidden="true">&times;</span>#}
+{#                        </button>#}
+{#                    </div>#}
+{#                {% endif %}#}
 
             </div>
             <!-- /.col-lg-3 -->
