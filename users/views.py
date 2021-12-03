@@ -59,8 +59,6 @@ def profile(request):
         form = UserProfileForm(instance=user, files=request.FILES, data=request.POST)
         profile_form = UserProfileEditForm(instance=user.userprofile, data=request.POST)
         form.check_pwd()
-        print(form.errors or 'ok')
-        print(UserProfileForm().errors or 'ok')
         if form.is_valid() and profile_form.is_valid() and not form.errors:
             form.save()
             messages.success(request, 'Данные успешно изменены')
