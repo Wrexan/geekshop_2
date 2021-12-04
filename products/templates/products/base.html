@@ -38,6 +38,14 @@
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'users:profile' %}">Корзина
+                            <i class="fas fa-shopping-cart"></i> {{ baskets.0.total_quantity }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'orders:orders_list' %}">Заказы <i class="fas fa-receipt"></i></a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'users:profile' %}">{{ user.username }}
                             <i class="fas fa-user-circle"></i>
                         </a>
@@ -49,14 +57,6 @@
                             </a>
                         </li>
                     {% endif %}
-                    <li>
-                        <div id="baskq" class="nav-link">
-                        Корзина <span class="fas fa-shopping-cart"> {{ baskets.0.total_quantity }}</span>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'orders:orders_list' %}">Заказы <i class="fas fa-receipt"></i></a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'users:logout' %}">Выйти <i class="fas fa-sign-out-alt"></i></a>
                     </li>
@@ -74,7 +74,13 @@
 </div>
 
 <!-- Page Content -->
-{% block content %} {% endblock %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            {% block content %} {% endblock %}
+        </div>
+    </div>
+</div>
 
 {% block footer %} {% endblock %}
 
