@@ -4,7 +4,7 @@
 
 {% block content %}
    {% include 'ordersapp/includes/inc_order_summary.html' %}
-   <div class="basket_list p-4">
+   <div class="basket_list p-4 bg-light border-dark">
        {% for item in object.orderitems.select_related %}
            <div class="basket_record">
                <img width="100 px" height="100 px"

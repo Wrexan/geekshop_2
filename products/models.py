@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.functional import cached_property
 
 
 class ProductCategory(models.Model):
@@ -22,8 +23,9 @@ class Product(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.name} | {self.category}'
+        return f'{self.name}'
+        # return f'{self.name} | {self.category}'
 
     @staticmethod
     def get_items():
-        return Product.objects.filter(is_active=True,  quantity__gte=1).order_by('category', 'name')
+        return Product.objects.filter(is_active=True, quantity__gte=1).order_by('category', 'name')
