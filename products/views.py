@@ -12,7 +12,7 @@ from baskets.models import Basket
 
 
 def index(request):
-    context = {'title': 'GeekShop111',
+    context = {'title': 'GeekShopWrex',
                'date': datetime.now()}
     return render(request, 'products/index.html', context)
 
@@ -21,9 +21,9 @@ def products(request, category_id=None, page=1):
     if category_id:
         # category = ProductCategory.objects.get(id=category_id)
         # products = Product.objects.filter(category=category)
-        products = Product.objects.filter(category_id=category_id)
+        products = Product.objects.filter(category_id=category_id).order_by('category', 'name')
     else:
-        products = Product.objects.all()
+        products = Product.objects.all().order_by('category', 'name')
     context = {'title': 'GeekShop-Catalog',
                'categories': ProductCategory.objects.all()}
     paginator = Paginator(products, 3)

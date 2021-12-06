@@ -29,7 +29,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if env('DEBUG') == 'True' else False
+DEBUG = True if env('DEBUG') in ('True', 'true', '1',) else False
+
+LOW_CACHE = True if env('LOW_CACHE') in ('True', 'true', '1',) else False
 
 ALLOWED_HOSTS = ['*']
 
@@ -269,3 +271,18 @@ if DEBUG:
         'debug_toolbar.panels.profiling.ProfilingPanel',
         'template_profiler_panel.panels.template.TemplateProfilerPanel',
     ]
+
+if LOW_CACHE:
+    if os.name == 'posix':
+        CACHE_MIDDLEWARE_ALIAS = 'default'
+        CACHE_MIDDLEWARE_SECONDS = 10
+        CACHE_MIDDLEWARE_KEY_PREFIX = 'geekshop'
+
+        CACHES = {
+            'default': {
+                'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+                'LOCATION': '127.0.0.1:11211',
+            }
+        }
+
+
