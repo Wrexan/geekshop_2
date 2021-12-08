@@ -1,10 +1,10 @@
 from django.shortcuts import HttpResponseRedirect
-from django.contrib import messages
+# from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 
-from products.models import Product
+# from products.models import Product
 from baskets.models import Basket
 
 
@@ -41,7 +41,7 @@ def basket_edit(request, id, quantity):
             basket.save()
         else:
             basket.delete()
-    baskets = Basket.objects.filter(user=request.user)
+    baskets = Basket.objects.filter(user=request.user).order_by('category', 'name')  # order_by('product__category')
     context = {'baskets': baskets}
     result = render_to_string('baskets/baskets.html', context)
     return JsonResponse({'result': result})

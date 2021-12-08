@@ -4,6 +4,14 @@ from baskets.models import Basket
 # from users.models import User
 
 
+@admin.register(Basket)
+class BasketsAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'id', 'user',)
+                    # 'status',
+                    # 'get_total_quantity', 'get_total_cost',
+                    # 'created', 'updated', 'is_active',)
+
+
 class BasketAdmin(admin.TabularInline):
     model = Basket
     fields = ('product', 'quantity', 'created_timestamp')
