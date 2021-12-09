@@ -15,6 +15,7 @@ from django.contrib.messages import constants as messages
 
 import debug_toolbar.middleware
 import environ
+
 env = environ.Env()
 environ.Env.read_env()
 

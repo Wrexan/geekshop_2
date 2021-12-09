@@ -121,7 +121,7 @@ class OrderRead(DetailView):
 
 def order_forming_complete(request, pk):
     order = get_object_or_404(Order, pk=pk)
-    print('Order proceed: '+str(order))
+    # print('Order proceed: '+str(order))
     order.status = Order.SENT_TO_PROCEED
     order.save()
 
