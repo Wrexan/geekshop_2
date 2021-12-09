@@ -2,9 +2,9 @@ import hashlib
 import random
 
 from django import forms
-from django.contrib.auth import password_validation
+# from django.contrib.auth import password_validation
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
-from django.core.exceptions import ValidationError
+# from django.core.exceptions import ValidationError
 
 from users.models import User, UserProfile
 
